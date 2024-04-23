@@ -97,6 +97,58 @@ SELECT
 FROM t_milan_durek_project_SQL_primary;
 
 
+
+
+
+
+
+
+
+
+
+
+-- Vytvoření druhé (secondary) tabulky se státy
+SELECT
+	*
+FROM countries c;
+
+SELECT
+	*
+FROM economies e;
+
+CREATE TABLE t_milan_durek_project_SQL_secondary(
+SELECT
+	e.year,
+	SUM(e.GDP) AS sum_GDP,
+	SUM(e.population) AS sum_population,
+	c.region_in_world
+FROM economies e
+INNER JOIN countries c
+	ON e.country = c.country
+WHERE GDP IS NOT NULL AND e.population IS NOT NULL AND region_in_world IS NOT NULL
+GROUP BY region_in_world, year);
+
+-- Pomocné výrazy pro zrušení tabulky a vybrání tabulky
+/*
+DROP TABLE	t_milan_durek_project_SQL_secondary
+*/
+
+SELECT
+	*
+FROM t_milan_durek_project_SQL_secondary;
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- OTÁZKA 1 - Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
 
 SELECT
@@ -125,8 +177,6 @@ SELECT
 	*
 FROM t_milan_durek_project_SQL_primary;
 
-
--- Netuším, jak mám spojit tyto dva výrazy do jedné tabulky. Vytáhl jsem tedy ve dvou výrazech a spojil v excelu
 SELECT
 	name,
 	year_data,
@@ -149,7 +199,6 @@ SELECT
 	*
 FROM t_milan_durek_project_SQL_primary
 
--- Netuším, jak mám spojit tyto dva výrazy do jedné tabulky. Vytáhl jsem tedy ve dvou výrazech a spojil v excelu
 SELECT
 	name,
 	year_data,
@@ -168,7 +217,6 @@ GROUP BY name, year_data;
 
 -- OTÁZKA 4 - Existuje rok, ve kterém byl meziroční nárůst cen potravin výrazně vyšší než růst mezd (větší než 10 %)?
 
--- Netuším, jak mám spojit tyto dva výrazy do jedné tabulky. Vytáhl jsem tedy ve dvou výrazech a spojil v excelu
 SELECT
 	source_table,
 	year_data,
@@ -187,35 +235,15 @@ GROUP BY source_table, year_data;
 -- OTÁZKA 5 - Má výška HDP vliv na změny ve mzdách a cenách potravin? Neboli, pokud HDP vzroste výrazněji v jednom roce, 
 -- projeví se to na cenách potravin či mzdách ve stejném nebo násdujícím roce výraznějším růstem?
 
--- Vytvoření druhé tabulky se státy
 SELECT
 	*
-FROM countries c;
+FROM t_milan_durek_project_SQL_secondary;
 
 SELECT
-	*
-FROM economies e;
-
-CREATE TABLE t_milan_durek_project_SQL_secondary(
-SELECT
-	e.year,
-	SUM(e.GDP) AS sum_GDP,
-	SUM(e.population) AS sum_population,
-	c.region_in_world
-FROM economies e
-INNER JOIN countries c
-	ON e.country = c.country
-WHERE GDP IS NOT NULL AND e.population IS NOT NULL AND region_in_world IS NOT NULL
-GROUP BY region_in_world, year);
-
--- Pomocné výrazy pro zrušení tabulky a vybrání tabulky
-/*
-DROP TABLE	t_milan_durek_project_SQL_secondary
-*/
-
--- Netuším, jak mám spojit tyto 4 výrazy do jedné tabulky. Vytáhl jsem tedy ve 4 výrazech a spojil v excelu
-SELECT
-	*
+	year,
+	sum_GDP,
+	sum_population,
+	region_in_world
 FROM t_milan_durek_project_SQL_secondary;
 
 SELECT
